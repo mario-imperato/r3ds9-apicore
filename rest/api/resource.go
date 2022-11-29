@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-gin/httpsrv"
 	"github.com/gin-gonic/gin"
-	"github.com/mario-imperato/r3ds9-apigtw/linkedservices"
+	"github.com/mario-imperato/r3ds9-apicommon/linkedservices"
 	"github.com/mario-imperato/r3ds9-apigtw/rest"
 	"github.com/mario-imperato/r3ds9-apigtw/rest/middleware"
 	"github.com/mario-imperato/r3ds9-mongodb/model/r3ds9-apigtw/session"

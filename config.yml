@@ -6,13 +6,13 @@ config:
 
   http:
     bind-address: localhost
-    port: 8080
+    port: ${R3DS9_APICORE_PORT}
     shutdown-timeout: 400ms
     html-content: /Users/marioa.imperato/projects/r3ds9-2/web/apps/*/*tmpl
     static-content:
       - url-prefix: /web
         indexes: false
-        document-root: /Users/marioa.imperato/projects/r3ds9-2Ogni app/web
+        document-root: /Users/marioa.imperato/projects/r3ds9-2/web
 
     #    html-content: /templates/*
 
@@ -20,13 +20,7 @@ config:
       path: /api
       context:
         sys-metrics-endpoint: /metrics
-        # apps-root-folder: /Users/marioa.imperato/projects/r3ds9-2
-        proxy-mappings:
-          core:
-            api-key: my-api-key
-            hostname: localhost
-            port: 3000
-            url: "/api/core/:domain/:site/:lang:exPathInfo"
+        api-key: my-api-key
 
     mw-use:
       - gin-mw-metrics
@@ -69,13 +63,11 @@ config:
           max-connection-life-time: 6000000
         collections:
           - id: site
-            name: apigtw_site
+            name: apicore_site
           - id: domain
-            name: apigtw_domain
-          - id: session
-            name: apigtw_session
+            name: apicore_domain
           - id: user
-            name: apigtw_user
+            name: apicore_user
 
     kafka:
       - broker-name: local
