@@ -7,6 +7,7 @@ import (
 	_ "github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-gin/httpsrv/resource"
 	"github.com/GPA-Gruppo-Progetti-Avanzati-SRL/tpm-gin/middleware"
 	"github.com/mario-imperato/r3ds9-apicommon/linkedservices"
+	_ "github.com/mario-imperato/r3ds9-apicore/rest/api/user"
 	r3ds9MdbApiGtw "github.com/mario-imperato/r3ds9-mongodb/model/r3ds9-apigtw"
 	r3ds9MdbVersion "github.com/mario-imperato/r3ds9-mongodb/version"
 	"github.com/rs/zerolog/log"

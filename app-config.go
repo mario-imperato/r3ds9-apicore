@@ -34,7 +34,7 @@ var DefaultCfg = Config{
 			},
 			MetricsCfg: &middleware.PromHttpMetricsHandlerConfig{
 				Namespace:  "r3ng",
-				Subsystem:  "apigtw",
+				Subsystem:  "apicore",
 				Collectors: nil,
 			},
 			TraceCfg: &middleware.TracingHandlerConfig{

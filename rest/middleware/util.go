@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/mario-imperato/r3ds9-apigtw/rest"
+	"github.com/mario-imperato/r3ds9-apicore/rest"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"net/http"

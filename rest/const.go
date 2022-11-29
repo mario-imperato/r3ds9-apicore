@@ -41,9 +41,9 @@ type ReqType string
 
 const (
 	ReqTypeApi       ReqType = "api"
-	ReqTypeDomains   ReqType = "ui-domains"
-	ReqTypeDomain    ReqType = "ui-domain"
-	ReqTypeSiteApp   ReqType = "ui-domain-site-app"
+	ReqTypeDomains   ReqType = "api-root"
+	ReqTypeDomain    ReqType = "api-domain"
+	ReqTypeSite      ReqType = "api-domain-site"
 	ReqTypeMalformed ReqType = "malformed"
 	ReqTypeInvalid   ReqType = "invalid"
 )

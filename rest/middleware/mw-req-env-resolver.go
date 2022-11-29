@@ -7,18 +7,16 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mario-imperato/r3ds9-apicommon/linkedservices"
 	"github.com/mario-imperato/r3ds9-apicommon/linkedservices/mongodb"
-	"github.com/mario-imperato/r3ds9-apigtw/rest"
-	"github.com/mario-imperato/r3ds9-mongodb/model/r3ds9-apigtw/domain"
-	"github.com/mario-imperato/r3ds9-mongodb/model/r3ds9-apigtw/site"
+	"github.com/mario-imperato/r3ds9-apicore/rest"
 	"github.com/rs/zerolog/log"
 	"net/http"
 )
 
-func RequestApiEnvResolver(reqCategory rest.ReqCategory) httpsrv.H {
+func RequestEnvResolver() httpsrv.H {
 
 	const semLogContext = "middleware/request-api-env-resolver"
 	return func(c *gin.Context) {
-		env, ok := extractApiEnvFromContext(c, reqCategory)
+		env, ok := extractApiEnvFromContext(c)
 		if !ok {
 			c.AbortWithError(http.StatusBadRequest, errors.New("bad request"))
 			return
@@ -42,27 +40,25 @@ func RequestApiEnvResolver(reqCategory rest.ReqCategory) httpsrv.H {
 	}
 }
 
-func extractApiEnvFromContext(c *gin.Context, reqCategory rest.ReqCategory) (ReqEnv, bool) {
+func extractApiEnvFromContext(c *gin.Context) (ReqEnv, bool) {
 
 	env := ReqEnv{
-		Category:      reqCategory,
-		Domain:        c.Param("domain"),
-		Site:          c.Param("site"),
-		Lang:          c.Param("lang"),
-		ExtraPathInfo: c.Param("exPathInfo"),
+		Domain: c.Param("domain"),
+		Site:   c.Param("site"),
+		Lang:   c.Param("lang"),
 	}
 
-	env.ReqType = resolveApiRequestType(reqCategory, env.Domain, env.Site, env.Lang)
+	env.ReqType = resolveApiRequestType(env.Domain, env.Site, env.Lang)
 	return env, env.IsValid()
 }
 
 // resolveRequestType syntax level resolution. doesn't check if domain or site do really exist.
-func resolveApiRequestType(mountPoint rest.ReqCategory, domain, site, lang string) rest.ReqType {
+func resolveApiRequestType(domain, site, lang string) rest.ReqType {
 
 	at := rest.ReqTypeDomains
 	if domain != rest.UnassignedTargetDomain {
 		if site != rest.UnassignedTargetSite {
-			at = rest.ReqTypeSiteApp
+			at = rest.ReqTypeSite
 		} else {
 			at = rest.ReqTypeDomain
 		}
@@ -76,24 +72,5 @@ func resolveApiRequestType(mountPoint rest.ReqCategory, domain, site, lang strin
 func validateApiRequestFromStore(lks *mongodb.MDbLinkedService, env ReqEnv) (ReqEnv, bool) {
 
 	const semLogContext = "middleware/request-api-env-resolver/validate-env-from-store"
-	var ok bool
-	switch env.ReqType {
-	case rest.ReqTypeDomains:
-		// In this case is the 'root' domain.
-		coll := lks.GetCollection("domain", "")
-		_, ok = domain.GetFromCache(domain.NewCacheResolver(coll), env.Domain)
-
-	case rest.ReqTypeDomain:
-		coll := lks.GetCollection("domain", "")
-		_, ok = domain.GetFromCache(domain.NewCacheResolver(coll), env.Domain)
-
-	case rest.ReqTypeSiteApp:
-		coll := lks.GetCollection("site", "")
-		_, ok = site.GetFromCache(site.NewCacheResolver(coll), env.Domain, env.Site)
-
-	default:
-		ok = true
-	}
-
-	return env, ok
+	return env, true
 }
