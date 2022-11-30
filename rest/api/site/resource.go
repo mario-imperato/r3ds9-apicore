@@ -17,7 +17,7 @@ func init() {
 
 func registerGroups(srvCtx httpsrv.ServerContext) []httpsrv.G {
 
-	const semLogContext = "/api/user/resource/register-groups"
+	const semLogContext = "/api/site/resource/register-groups"
 
 	var apiKey string
 	if v, ok := srvCtx.GetConfig("api-key"); !ok {
@@ -33,15 +33,29 @@ func registerGroups(srvCtx httpsrv.ServerContext) []httpsrv.G {
 	gs := make([]httpsrv.G, 0, 2)
 
 	gs = append(gs, httpsrv.G{
-		Name:        "Api User",
-		Path:        definitions.ApiCorePathGroupWhoAmI,
+		Name:        "Api Host Site",
+		Path:        definitions.ApiCorePathGroupHostSite,
 		Middlewares: []httpsrv.H{middleware.RequestEnvResolver(apiKey)},
 		Resources: []httpsrv.R{
 			{
-				Name: "WhoAmI",
-				//Path:          definitions.ApiCorePathPatternWhoAmI,
+				Name: "HostSite",
+				// Path:          "host",
 				Method:        http.MethodGet,
-				RouteHandlers: []httpsrv.H{whoAmi()},
+				RouteHandlers: []httpsrv.H{getHostSite()},
+			},
+		},
+	})
+
+	gs = append(gs, httpsrv.G{
+		Name:        "Api Site",
+		Path:        definitions.ApiCorePathGroupSite,
+		Middlewares: []httpsrv.H{middleware.RequestEnvResolver(apiKey)},
+		Resources: []httpsrv.R{
+			{
+				Name:          "Site",
+				Path:          ":site",
+				Method:        http.MethodGet,
+				RouteHandlers: []httpsrv.H{getSite()},
 			},
 		},
 	})
@@ -49,9 +63,16 @@ func registerGroups(srvCtx httpsrv.ServerContext) []httpsrv.G {
 	return gs
 }
 
-func whoAmi() httpsrv.H {
+func getHostSite() httpsrv.H {
 	return func(c *gin.Context) {
-		const semLogContext = "/api/user/resource/whoAmi"
-		c.String(http.StatusOK, "WhoAmi Invoked!")
+		const semLogContext = "/api/site/resource/get-host-site"
+		c.String(http.StatusOK, "host site Invoked: "+c.Param(definitions.HostSiteUrlParam))
+	}
+}
+
+func getSite() httpsrv.H {
+	return func(c *gin.Context) {
+		const semLogContext = "/api/site/resource/get-site"
+		c.String(http.StatusOK, "site Invoked: "+c.Param("site"))
 	}
 }

@@ -20,7 +20,7 @@ config:
       path: /api
       context:
         sys-metrics-endpoint: /metrics
-        api-key: my-api-key
+        api-key: ${R3DS9_API_KEY}
 
     mw-use:
       - gin-mw-metrics
